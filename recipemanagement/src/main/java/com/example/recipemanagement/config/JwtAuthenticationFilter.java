@@ -1,0 +1,70 @@
+package com.example.recipemanagement.config;
+
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
+import java.io.IOException;
+
+@Component
+@Slf4j
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
+    private final String HEADER = "Authorization";
+    private final String PREFIX = "Bearer ";
+
+    @Value("${recipe.user.name}")
+    private String userName;
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+            throws ServletException, IOException
+    {
+        log.debug("Performing validations in doFilterInternal");
+        try {
+            if (checkJWTToken(request, response)) {
+                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userName, null,null);
+                SecurityContextHolder.getContext().setAuthentication(auth);
+                log.debug("SecurityContextHolder set with proper auth");
+            } else {
+                String errMsg = "JWT Token check failed, clearing SecurityContextHolder";
+                log.error(errMsg);
+                SecurityContextHolder.clearContext();
+            }
+            chain.doFilter(request, response);
+        } catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException e) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            ((HttpServletResponse) response).sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
+            log.error("Exception caught during security filter chain validation");
+            ExceptionUtils.getStackTrace(e);
+            return;
+        }
+    }
+
+    private boolean checkJWTToken(HttpServletRequest request, HttpServletResponse res) {
+        String authenticationHeader = request.getHeader(HEADER);
+        if (authenticationHeader == null || !authenticationHeader.startsWith(PREFIX)) {
+            log.error("Invalid JWT Token Provided, JWT Token check failed!!!");
+            return false;
+        }
+        log.debug("Given JWT Token is valid, JWT Token check success");
+        return true;
+    }
+
+}
