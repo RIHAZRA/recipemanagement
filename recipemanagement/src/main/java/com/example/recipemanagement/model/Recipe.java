@@ -1,6 +1,6 @@
 package com.example.recipemanagement.model;
 
-import jakarta.persistence.*;
+import javax.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

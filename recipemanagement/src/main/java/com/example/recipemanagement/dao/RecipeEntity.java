@@ -1,8 +1,9 @@
 package com.example.recipemanagement.dao;
 
-import jakarta.persistence.*;
+
 import lombok.Data;
 
+import javax.persistence.*;
 import java.util.Date;
 
 @Data

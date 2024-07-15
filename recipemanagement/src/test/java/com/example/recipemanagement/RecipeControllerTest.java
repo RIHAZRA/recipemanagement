@@ -4,16 +4,19 @@ import com.example.recipemanagement.dao.RecipeEntity;
 import com.example.recipemanagement.model.Recipe;
 import com.example.recipemanagement.model.User;
 import com.example.recipemanagement.util.Util;
-import lombok.Value;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.boot.test.web.*;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.ErrorResponse;
+
+import com.example.recipemanagement.exceptions.ErrorResponse;
+import com.example.recipemanagement.exceptions.ErrorMessages;
 
 import java.net.http.HttpHeaders;
 
