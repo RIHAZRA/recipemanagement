@@ -108,7 +108,7 @@ public class RecipeService {
     }
 
     //Method to modify an existing recipe
-    public Recipe modifyExistingRecipeInRepository(Recipe recipe) {
+    public Recipe modifyExistingRecipeInRepository(Integer id,Recipe recipe) {
         return saveRecipeToRepository(recipe);
     }
 

@@ -18,27 +18,27 @@ import java.util.List;
 
         @GetMapping
         public ResponseEntity<List<Recipe>> getAllRecipes() {
-            return ResponseEntity.ok(recipeService.getAllRecipes());
+            return ResponseEntity.ok(recipeService.getAllRecipesFromRepository());
         }
 
         @GetMapping("/{id}")
-        public ResponseEntity<Recipe> getRecipeById(@PathVariable Long id) {
-            return ResponseEntity.ok(recipeService.getRecipeById(id));
+        public ResponseEntity<Recipe> getRecipeById(@PathVariable Integer id) {
+            return ResponseEntity.ok(recipeService.getRecipeFromRepository(id));
         }
 
         @PostMapping
         public ResponseEntity<Recipe> createRecipe(@RequestBody Recipe recipe) {
-            return new ResponseEntity<>(recipeService.createRecipe(recipe), HttpStatus.CREATED);
+            return new ResponseEntity<>(recipeService.saveRecipeToRepository(recipe), HttpStatus.CREATED);
         }
 
         @PutMapping("/{id}")
-        public ResponseEntity<Recipe> updateRecipe(@PathVariable Long id, @RequestBody Recipe recipe) {
-            return ResponseEntity.ok(recipeService.updateRecipe(id, recipe));
+        public ResponseEntity<Recipe> updateRecipe(@PathVariable Integer id, @RequestBody Recipe recipe) {
+            return ResponseEntity.ok(recipeService.modifyExistingRecipeInRepository(id, recipe));
         }
 
         @DeleteMapping("/{id}")
-        public ResponseEntity<Void> deleteRecipe(@PathVariable Long id) {
-            recipeService.deleteRecipe(id);
+        public ResponseEntity<Void> deleteRecipe(@PathVariable Integer id) {
+            recipeService.deleteRecipeFromRepository(id);
             return ResponseEntity.noContent().build();
         }
     }
